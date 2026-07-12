@@ -53,6 +53,11 @@ body {
     color: var(--dark-charcoal);
 }
 
+.logo-svg {
+    height: 40px;
+    width: auto;
+}
+
 .logo-text {
     font-size: 24px;
     font-weight: 700;
@@ -294,7 +299,7 @@ body {
 
 .team-photo {
     width: 100%;
-    height: 250px;
+    height: 300px;
     object-fit: cover;
     display: block;
 }
@@ -305,24 +310,13 @@ body {
 }
 
 .team-member h3 {
-    margin-top: 20px;
+    margin-top: 25px;
     margin-bottom: 8px;
+    font-size: 20px;
 }
 
 .member-avatar {
-    width: 80px;
-    height: 80px;
-    background-color: var(--primary-gold);
-    color: var(--dark-charcoal);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 28px;
-    font-weight: 700;
-    margin: 20px auto 0;
-    position: relative;
-    z-index: 1;
+    display: none;
 }
 
 .team-member h3 {
