@@ -47,7 +47,7 @@ body {
 .logo {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
     text-decoration: none;
 }
 
@@ -55,6 +55,14 @@ body {
     height: 50px;
     width: auto;
     display: block;
+}
+
+.company-name {
+    font-size: 28px;
+    font-weight: 600;
+    color: var(--dark-charcoal);
+    font-family: Georgia, 'Times New Roman', serif;
+    letter-spacing: -0.5px;
 }
 
 .nav-links {
