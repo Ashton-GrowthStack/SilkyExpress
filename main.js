@@ -16,23 +16,7 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 const consultationForm = document.getElementById('consultationForm');
 if (consultationForm) {
     consultationForm.addEventListener('submit', function(e) {
-        e.preventDefault();
-
-        // Get form data
-        const formData = {
-            name: document.getElementById('name').value,
-            email: document.getElementById('email').value,
-            phone: document.getElementById('phone').value,
-            whatsapp: document.getElementById('whatsapp').value,
-            company: document.getElementById('company').value,
-            product: document.getElementById('product').value,
-            timestamp: new Date().toISOString()
-        };
-
-        // Log the data (in production, this would send to a server)
-        console.log('Consultation Request:', formData);
-
-        // Show success message
+        // Show success message before submitting
         const successMessage = document.createElement('div');
         successMessage.className = 'success-message';
         successMessage.innerHTML = `
@@ -49,14 +33,10 @@ if (consultationForm) {
             font-weight: 600;
         `;
 
-        // Clear form and show message
-        consultationForm.reset();
         consultationForm.parentElement.insertBefore(successMessage, consultationForm.nextSibling);
 
-        // Remove message after 5 seconds
-        setTimeout(() => {
-            successMessage.remove();
-        }, 5000);
+        // Let the form submit to Basin after showing message
+        // (don't prevent default - let it naturally submit)
     });
 }
 
