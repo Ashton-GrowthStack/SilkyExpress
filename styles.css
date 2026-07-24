@@ -52,9 +52,11 @@ body {
 }
 
 .logo-img {
-    height: 80px;
-    width: auto;
+    height: 120px;
+    width: 120px;
     display: block;
+    object-fit: cover;
+    object-position: center top;
 }
 
 .company-name {
@@ -97,7 +99,10 @@ body {
 
 /* Hero Section */
 .hero {
-    background: linear-gradient(135deg, #2C3E50 0%, #34495e 100%);
+    background: linear-gradient(rgba(44, 62, 80, 0.55), rgba(44, 62, 80, 0.55)), url('hero-bg.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
     color: var(--white);
     padding: 120px 20px;
     text-align: center;
@@ -119,9 +124,10 @@ body {
     margin: 15px;
     font-size: 24px;
     font-weight: 600;
-    color: var(--primary-gold);
+    color: var(--white);
     opacity: 0;
     animation: fadeInPop 0.8s ease-out forwards;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
 }
 
 .element-1 {
@@ -160,6 +166,7 @@ body {
     font-size: 48px;
     margin-bottom: 20px;
     line-height: 1.2;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
 }
 
 .main-heading .highlight {
@@ -173,6 +180,7 @@ body {
     max-width: 700px;
     margin-left: auto;
     margin-right: auto;
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
 }
 
 .hero-overlay {
