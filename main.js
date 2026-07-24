@@ -1,6 +1,20 @@
+// Gallery toggle function
+function toggleGallery(e) {
+    e.preventDefault();
+    const gallery = document.getElementById('gallery');
+    const isVisible = gallery.style.display !== 'none';
+    gallery.style.display = isVisible ? 'none' : 'block';
+    if (!isVisible) {
+        setTimeout(() => {
+            gallery.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 100);
+    }
+}
+
 // Smooth scrolling for navigation links
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
+        if (this.classList.contains('gallery-tab')) return;
         e.preventDefault();
         const target = document.querySelector(this.getAttribute('href'));
         if (target) {
