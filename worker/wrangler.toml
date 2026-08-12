@@ -1,0 +1,11 @@
+name = "silkyexpress-catalog"
+main = "src/index.js"
+compatibility_date = "2026-08-12"
+
+[env.production]
+route = "https://silkyexpress-catalog.*.workers.dev/*"
+zone_id = ""
+
+[[env.production.routes]]
+pattern = "silkyexpress-catalog.*.workers.dev/*"
+zone_name = ""

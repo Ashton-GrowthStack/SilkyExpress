@@ -28,20 +28,26 @@
     <!-- Hero Section -->
     <section class="hero" style="background-image: url('hero-bg.jpg'); background-size: cover; background-position: center;">
         <div class="hero-content">
-            <div class="animated-element element-1">
-                <span class="element-text">To Your Door</span>
-            </div>
-            <div class="animated-element element-2">
-                <span class="element-text">Guaranteed Quality</span>
-            </div>
-            <div class="animated-element element-3">
-                <span class="element-text">Fast Lead Times</span>
+            <div class="hero-badges">
+                <div class="animated-element element-1">
+                    <span class="element-text">To Your Door</span>
+                </div>
+                <div class="animated-element element-2">
+                    <span class="element-text">Guaranteed Quality</span>
+                </div>
+                <div class="animated-element element-3">
+                    <span class="element-text">Fast Lead Times</span>
+                </div>
             </div>
             <div class="main-heading">
                 <h1>Source Products from China at <span class="highlight">15-20% Lower Costs</span></h1>
                 <p>Global sourcing made simple. We connect you with verified manufacturers and handle every step.</p>
-                <a href="#consultation" class="btn btn-primary">Request Consultation</a>
             </div>
+            <div class="catalog-section" id="catalog">
+                <div class="catalog-filters"></div>
+                <div class="catalog-grid"></div>
+            </div>
+            <a href="#consultation" class="btn btn-primary catalog-cta">Request Consultation</a>
         </div>
     </section>
 
@@ -103,8 +109,9 @@
     </section>
 
     <!-- Gallery Section -->
-    <section class="gallery" id="gallery">
+    <section class="gallery" id="gallery" aria-hidden="true">
         <div class="container">
+            <button class="gallery-close" onclick="closeGallery()" aria-label="Close gallery">&times;</button>
             <h2>Our Work</h2>
             <div class="gallery-grid">
                 <div class="gallery-item"><img src="gallery/1.jpg" alt="Gallery" loading="lazy"></div>

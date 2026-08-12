@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Silky Express - Catalog Admin</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .admin-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .admin-header h1 {
+            font-size: 28px;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .admin-header p {
+            color: #666;
+        }
+
+        .passcode-screen {
+            background: white;
+            padding: 40px 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .passcode-screen h2 {
+            font-size: 20px;
+            color: #2c3e50;
+            margin-bottom: 30px;
+        }
+
+        .passcode-input-group {
+            margin-bottom: 20px;
+        }
+
+        .passcode-input-group input {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            transition: border-color 0.3s;
+        }
+
+        .passcode-input-group input:focus {
+            outline: none;
+            border-color: #d4af37;
+        }
+
+        .passcode-error {
+            color: #e74c3c;
+            font-size: 14px;
+            margin-bottom: 15px;
+            display: none;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background-color: #d4af37;
+            color: #2c3e50;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .btn:hover {
+            background-color: #c9a227;
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        .admin-content {
+            display: none;
+        }
+
+        .admin-content.unlocked {
+            display: block;
+        }
+
+        .items-section {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: 20px;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .items-list {
+            margin-bottom: 30px;
+        }
+
+        .item-card {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 6px;
+            margin-bottom: 12px;
+            border: 1px solid #eee;
+        }
+
+        .item-card img {
+            width: 60px;
+            height: 60px;
+            border-radius: 4px;
+            object-fit: cover;
+            flex-shrink: 0;
+        }
+
+        .item-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .item-name {
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 16px;
+            margin-bottom: 4px;
+        }
+
+        .item-category {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .item-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-small {
+            padding: 6px 12px;
+            font-size: 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-edit {
+            background-color: #3498db;
+            color: white;
+        }
+
+        .btn-edit:hover {
+            background-color: #2980b9;
+        }
+
+        .btn-delete {
+            background-color: #e74c3c;
+            color: white;
+        }
+
+        .btn-delete:hover {
+            background-color: #c0392b;
+        }
+
+        .add-form {
+            background-color: #f9f9f9;
+            padding: 30px;
+            border-radius: 8px;
+            border: 2px dashed #d4af37;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #2c3e50;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+            font-family: inherit;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #d4af37;
+            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
+        }
+
+        .file-input-wrapper {
+            position: relative;
+            display: block;
+        }
+
+        .file-input-label {
+            display: block;
+            padding: 20px;
+            background-color: white;
+            border: 2px solid #d4af37;
+            border-radius: 4px;
+            text-align: center;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            color: #2c3e50;
+            font-weight: 600;
+        }
+
+        .file-input-label:hover {
+            background-color: #fffbf0;
+        }
+
+        .file-input-wrapper input[type="file"] {
+            display: none;
+        }
+
+        .file-name {
+            display: block;
+            margin-top: 8px;
+            color: #666;
+            font-size: 12px;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .btn-submit {
+            flex: 1;
+        }
+
+        .btn-cancel {
+            background-color: #95a5a6;
+            color: white;
+            padding: 12px 30px;
+            flex: 1;
+        }
+
+        .btn-cancel:hover {
+            background-color: #7f8c8d;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 16px 24px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            max-width: 300px;
+            animation: slideUp 0.3s ease;
+            z-index: 9999;
+        }
+
+        .toast.success {
+            background-color: #27ae60;
+            color: white;
+        }
+
+        .toast.error {
+            background-color: #e74c3c;
+            color: white;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .loading {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #999;
+        }
+
+        @media (max-width: 600px) {
+            .admin-header h1 {
+                font-size: 24px;
+            }
+
+            .item-card {
+                flex-wrap: wrap;
+            }
+
+            .item-actions {
+                width: 100%;
+                margin-top: 10px;
+            }
+
+            .btn-small {
+                flex: 1;
+            }
+
+            .toast {
+                left: 20px;
+                right: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="admin-header">
+            <h1>Silky Express Catalog</h1>
+            <p>Manage your product catalog here</p>
+        </div>
+
+        <!-- Passcode Screen -->
+        <div id="passcodeScreen" class="passcode-screen">
+            <h2>Enter Admin Passcode</h2>
+            <div class="passcode-error" id="passcodeError"></div>
+            <div class="passcode-input-group">
+                <input
+                    id="passcodeInput"
+                    type="password"
+                    placeholder="Enter passcode"
+                    autocomplete="off"
+                >
+            </div>
+            <button class="btn" onclick="checkPasscode()">Unlock</button>
+        </div>
+
+        <!-- Admin Content (hidden until unlocked) -->
+        <div id="adminContent" class="admin-content">
+            <!-- Items List -->
+            <div class="items-section">
+                <h2 class="section-title">Current Products</h2>
+                <div class="items-list" id="itemsList"></div>
+            </div>
+
+            <!-- Add/Edit Form -->
+            <div class="items-section">
+                <h2 class="section-title" id="formTitle">Add New Product</h2>
+
+                <div class="add-form">
+                    <form id="catalogForm" onsubmit="submitCatalogForm(event)">
+                        <div class="form-group">
+                            <label for="productImage">Product Image</label>
+                            <div class="file-input-wrapper">
+                                <label for="imageFile" class="file-input-label">
+                                    Click to select image or drag & drop
+                                    <span class="file-name" id="fileName"></span>
+                                </label>
+                                <input
+                                    id="imageFile"
+                                    type="file"
+                                    accept="image/*"
+                                    onchange="updateFileName()"
+                                >
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="productName">Product Name *</label>
+                            <input
+                                id="productName"
+                                type="text"
+                                placeholder="e.g., Premium Silk Fabric"
+                                required
+                            >
+                        </div>
+
+                        <div class="form-group">
+                            <label for="productCategory">Category *</label>
+                            <input
+                                id="productCategory"
+                                type="text"
+                                placeholder="e.g., Electronics, Textiles, Hardware"
+                                required
+                            >
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-submit">Save Product</button>
+                            <button type="button" class="btn btn-cancel" onclick="resetForm()">Clear</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="admin.js"></script>
+</body>
+</html>
