@@ -31,12 +31,12 @@
 **Lead Lists Generated:** 3 CSV files (ashton-kzn-leads, ronnie-kzn-leads, ridz-cape-town-leads)
 
 ## Team Structure
-- **Ashton** — Marketing, Client Relations (Hangzhou-based, WhatsApp + Email)
-- **Paul** — Software Engineer, Client Relations (China/US)
-- **Zak** — Mechatronics Specialist, Sourcing (Hangzhou-based)
-- **Ridha** — Regional Agent (Cape Town, based in China)
-- **Albert** — Regional Agent (Cape Town, based in China)
-- **Ronnie** — Regional Agent (Durban, South Africa-based)
+- **Ashton Lee Naidoo** — Marketing, Client Relationship Specialist (South Africa - China)
+- **Paul Friendshuh** — Programmer, Client Relationship Specialist (America - China) ← UPDATED v1.2.0
+- **Zak Farah** — Mechatronics Specialist, Sourcing Agent
+- **Ridha Vahed** — Regional Agent (South Africa - China)
+- **Albert Botha** — Regional Agent (South Africa - China)
+- **Ronnie Naidoo** — Regional Agent (South Africa)
 
 ## Key Contact
 **Main Email:** silkyexpress@mailbox.org  
