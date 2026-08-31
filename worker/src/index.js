@@ -26,12 +26,7 @@ export default {
         }
 
         // Add CORS headers to all responses
-        // (plain object, not `new Headers(...)` — spreading a Headers
-        // instance with {...headers} silently drops all its entries,
-        // which was stripping Access-Control-Allow-Origin from every
-        // real response and causing the browser to reject them as CORS
-        // failures, even though the underlying GitHub write had succeeded)
-        const responseHeaders = { ...CORS_HEADERS };
+        const responseHeaders = new Headers(CORS_HEADERS);
 
         try {
             // Validate passcode
@@ -76,11 +71,13 @@ export default {
 // Handlers
 async function handleGetItems(env, headers) {
     try {
-        // Read via the authenticated GitHub API (always current), not the
-        // cached raw.githubusercontent.com CDN link (can lag several minutes
-        // behind the real content, making just-saved changes look missing).
-        const fileData = await fetchGitHubFile(env, CATALOG_PATH);
-        const data = atob(fileData.content);
+        const response = await fetch(
+            `https://raw.githubusercontent.com/${REPO}/${BRANCH}/${CATALOG_PATH}`
+        );
+        if (!response.ok) {
+            throw new Error('Catalog not found');
+        }
+        const data = await response.text();
         return new Response(data, {
             status: 200,
             headers: { ...headers, 'Content-Type': 'application/json' },

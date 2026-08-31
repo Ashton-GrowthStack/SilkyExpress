@@ -1,6 +1,6 @@
 // ===== Configuration =====
 // NOTE: Replace this with the actual Worker URL after deployment
-const WORKER_URL = 'https://silkyexpress-catalog.rowanjeremiahn.workers.dev';
+const WORKER_URL = 'https://silkyexpress-catalog.YOUR-WORKER-SUBDOMAIN.workers.dev';
 
 // ===== State =====
 let currentPasscode = null;
@@ -56,9 +56,7 @@ async function loadCatalogItems() {
     itemsList.innerHTML = '<div class="empty-state">Loading...</div>';
 
     try {
-        const response = await fetch(`${WORKER_URL}/items`, {
-            headers: { 'X-Admin-Passcode': currentPasscode },
-        });
+        const response = await fetch('https://raw.githubusercontent.com/Ashton-GrowthStack/SilkyExpress/main/catalog.json');
         if (!response.ok) throw new Error('Failed to load catalog');
 
         const items = await response.json();
