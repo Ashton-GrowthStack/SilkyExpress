@@ -8,7 +8,7 @@ let isEditMode = false;
 let editingItemId = null;
 
 // ===== Passcode =====
-function checkPasscode() {
+async function checkPasscode() {
     const input = document.getElementById('passcodeInput');
     const error = document.getElementById('passcodeError');
     const passcode = input.value.trim();
@@ -20,9 +20,30 @@ function checkPasscode() {
     }
 
     error.style.display = 'none';
-    currentPasscode = passcode;
-    sessionStorage.setItem('sx_admin_passcode', passcode);
-    unlockAdmin();
+
+    try {
+        const response = await fetch(`${WORKER_URL}/items`, {
+            headers: { 'X-Admin-Passcode': passcode },
+        });
+
+        if (response.status === 401) {
+            error.textContent = 'Incorrect passcode';
+            error.style.display = 'block';
+            return;
+        }
+        if (!response.ok) {
+            error.textContent = 'Could not reach server, please try again';
+            error.style.display = 'block';
+            return;
+        }
+
+        currentPasscode = passcode;
+        sessionStorage.setItem('sx_admin_passcode', passcode);
+        unlockAdmin();
+    } catch (err) {
+        error.textContent = 'Could not reach server, please try again';
+        error.style.display = 'block';
+    }
 }
 
 function unlockAdmin() {
