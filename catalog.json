@@ -1,11 +1,5 @@
 [
   {
-    "id": "sample-electronics-1",
-    "name": "Industrial Control Module",
-    "category": "Electronics",
-    "image": "catalog/sample-electronics-1.jpg"
-  },
-  {
     "id": "sample-textiles-1",
     "name": "Premium Silk Fabric Roll",
     "category": "Textiles",
