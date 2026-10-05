@@ -46,5 +46,11 @@
     "name": "Woodworking Planer",
     "category": "Woodworking Machinery",
     "image": "catalog/item-1791218004020-dodzg1cm5.png"
+  },
+  {
+    "id": "item-1791218008140-7qhw9ztpf",
+    "name": "Sanding & Polishing Machine",
+    "category": "Woodworking Machinery",
+    "image": "catalog/item-1791218008140-7qhw9ztpf.png"
   }
 ]
