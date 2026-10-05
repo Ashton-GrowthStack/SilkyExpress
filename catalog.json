@@ -214,5 +214,11 @@
     "name": "Dough Mixing & Kneading Machine",
     "category": "Food Machinery",
     "image": "catalog/item-1791224064858-tyteg50co.png"
+  },
+  {
+    "id": "item-1791224068763-yb1z0pim9",
+    "name": "Vegetable Cutting Machine",
+    "category": "Food Machinery",
+    "image": "catalog/item-1791224068763-yb1z0pim9.png"
   }
 ]
