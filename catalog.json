@@ -1,17 +1,5 @@
 [
   {
-    "id": "item-1788276788729-e91tpj06k",
-    "name": "Paint Mixer",
-    "category": "Machinery",
-    "image": "catalog/item-1788276788729-e91tpj06k.jpg"
-  },
-  {
-    "id": "item-1788277497783-czkl3l2lj",
-    "name": "Epoxy Stone Wash Resin",
-    "category": "Hardware",
-    "image": "catalog/item-1788277497783-czkl3l2lj.jpg"
-  },
-  {
     "id": "item-1791216609711-a2ix9l76p",
     "name": "Multi-Blade Saw",
     "category": "Woodworking Machinery",
@@ -244,5 +232,17 @@
     "name": "Noodle Conveying Equipment",
     "category": "Food Machinery",
     "image": "catalog/item-1791224084043-njupunt7z.png"
+  },
+  {
+    "id": "item-1788276788729-e91tpj06k",
+    "name": "Paint Mixer",
+    "category": "Machinery",
+    "image": "catalog/item-1788276788729-e91tpj06k.jpg"
+  },
+  {
+    "id": "item-1788277497783-czkl3l2lj",
+    "name": "Epoxy Stone Wash Resin",
+    "category": "Hardware",
+    "image": "catalog/item-1788277497783-czkl3l2lj.jpg"
   }
 ]
