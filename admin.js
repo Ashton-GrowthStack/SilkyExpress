@@ -139,8 +139,8 @@ function updateFileName() {
     const fileName = document.getElementById('fileName');
     if (fileInput.files.length > 0) {
         const file = fileInput.files[0];
-        if (file.size > 5 * 1024 * 1024) {
-            showToast('File must be smaller than 5MB', 'error');
+        if (file.size > 20 * 1024 * 1024) {
+            showToast('File must be smaller than 20MB', 'error');
             fileInput.value = '';
             fileName.textContent = '';
             return;
@@ -262,8 +262,8 @@ function addProductPanel() {
         const input = e.target;
         const label = panel.querySelector('.file-name');
         const file = input.files[0];
-        if (file && file.size > 5 * 1024 * 1024) {
-            showToast('File must be smaller than 5MB', 'error');
+        if (file && file.size > 20 * 1024 * 1024) {
+            showToast('File must be smaller than 20MB', 'error');
             input.value = '';
             label.textContent = '';
             return;
@@ -417,8 +417,7 @@ async function submitCatalogForm(e) {
 }
 
 async function addCatalogItem(name, category, file) {
-    const base64 = await fileToBase64(file);
-    const ext = file.name.split('.').pop().toLowerCase();
+    const { base64, ext } = await prepareImageForUpload(file);
 
     const response = await fetch(`${WORKER_URL}/items`, {
         method: 'POST',
@@ -463,8 +462,7 @@ async function editCatalogItem(id, name, category, file) {
     };
 
     if (file) {
-        const base64 = await fileToBase64(file);
-        const ext = file.name.split('.').pop().toLowerCase();
+        const { base64, ext } = await prepareImageForUpload(file);
         payload.imageBase64 = base64.split(',')[1];
         payload.imageExt = ext;
     }
@@ -524,6 +522,53 @@ async function deleteItem(id, name) {
 }
 
 // ===== Utilities =====
+// Shrink photos before upload so the homepage stays fast to load.
+// Big images are resized to at most 1000px and saved as JPEG; small ones are left alone.
+const UPLOAD_MAX_SIZE = 1000;
+const UPLOAD_KEEP_UNDER_BYTES = 300 * 1024;
+
+async function prepareImageForUpload(file) {
+    const originalExt = file.name.split('.').pop().toLowerCase();
+    const original = async () => ({ base64: await fileToBase64(file), ext: originalExt });
+
+    // Leave animations and vector images as they are
+    if (/^image\/(gif|svg\+xml)$/.test(file.type)) return original();
+
+    let img;
+    try {
+        img = await loadImage(file);
+    } catch (err) {
+        return original();
+    }
+
+    const largest = Math.max(img.naturalWidth, img.naturalHeight);
+    if (largest <= UPLOAD_MAX_SIZE && file.size <= UPLOAD_KEEP_UNDER_BYTES) return original();
+
+    const scale = Math.min(1, UPLOAD_MAX_SIZE / largest);
+    const canvas = document.createElement('canvas');
+    canvas.width = Math.round(img.naturalWidth * scale);
+    canvas.height = Math.round(img.naturalHeight * scale);
+    const ctx = canvas.getContext('2d');
+    ctx.fillStyle = '#ffffff'; // transparent PNGs get a white background instead of black
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+    const resized = canvas.toDataURL('image/jpeg', 0.82);
+    // In the rare case resizing made it bigger, keep the original
+    if (resized.length * 0.75 >= file.size) return original();
+    return { base64: resized, ext: 'jpg' };
+}
+
+function loadImage(file) {
+    return new Promise((resolve, reject) => {
+        const url = URL.createObjectURL(file);
+        const img = new Image();
+        img.onload = () => { URL.revokeObjectURL(url); resolve(img); };
+        img.onerror = (err) => { URL.revokeObjectURL(url); reject(err); };
+        img.src = url;
+    });
+}
+
 function fileToBase64(file) {
     return new Promise((resolve, reject) => {
         const reader = new FileReader();
