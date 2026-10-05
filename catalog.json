@@ -34,5 +34,11 @@
     "name": "Panel Cutting Saw",
     "category": "Woodworking Machinery",
     "image": "catalog/item-1791217995088-8ud28ebrs.png"
+  },
+  {
+    "id": "item-1791217999103-0a1hlwzlq",
+    "name": "Woodworking Band Saw",
+    "category": "Woodworking Machinery",
+    "image": "catalog/item-1791217999103-0a1hlwzlq.png"
   }
 ]
