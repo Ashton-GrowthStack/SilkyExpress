@@ -178,5 +178,11 @@
     "name": "Paper Tube Gluing Machine",
     "category": "Paper Tube Machinery",
     "image": "catalog/item-1791221166902-ciw28kiz9.png"
+  },
+  {
+    "id": "item-1791221170482-w3e3t8qj1",
+    "name": "Paper Tube Chamfering Machine",
+    "category": "Paper Tube Machinery",
+    "image": "catalog/item-1791221170482-w3e3t8qj1.png"
   }
 ]
