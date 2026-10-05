@@ -83,24 +83,50 @@ async function loadCatalogItems() {
         if (!response.ok) throw new Error('Failed to load catalog');
 
         const items = await response.json();
+        const itemsTotal = document.getElementById('itemsTotal');
         if (!items || items.length === 0) {
             itemsList.innerHTML = '<div class="empty-state">No products yet. Add one below!</div>';
+            if (itemsTotal) itemsTotal.textContent = '';
             return;
         }
 
-        itemsList.innerHTML = items.map(item => `
-            <div class="item-card">
-                <img src="${item.image}" alt="${item.name}" loading="lazy">
-                <div class="item-info">
-                    <div class="item-name">${item.name}</div>
-                    <div class="item-category">${item.category}</div>
+        // Group by category (A-Z), items A-Z within each group
+        const groups = {};
+        items.forEach(item => {
+            (groups[item.category] = groups[item.category] || []).push(item);
+        });
+        const categories = Object.keys(groups).sort((a, b) => a.localeCompare(b));
+
+        knownCategories = categories;
+        renderCategoryOptions();
+
+        if (itemsTotal) {
+            itemsTotal.textContent = `${items.length} product${items.length === 1 ? '' : 's'} in ${categories.length} categor${categories.length === 1 ? 'y' : 'ies'}`;
+        }
+
+        itemsList.innerHTML = categories.map(category => {
+            const groupItems = groups[category].sort((a, b) => a.name.localeCompare(b.name));
+            return `
+            <div class="category-group">
+                <div class="category-heading">
+                    <span>${category}</span>
+                    <span class="category-count">${groupItems.length}</span>
                 </div>
-                <div class="item-actions">
-                    <button class="btn-small btn-edit" onclick="editItem('${item.id}', '${item.name}', '${item.category}')">Edit</button>
-                    <button class="btn-small btn-delete" onclick="deleteItem('${item.id}', '${item.name}')">Delete</button>
+                ${groupItems.map(item => `
+                <div class="item-card">
+                    <img src="${item.image}" alt="${item.name}" loading="lazy">
+                    <div class="item-info">
+                        <div class="item-name">${item.name}</div>
+                        <div class="item-category">${item.category}</div>
+                    </div>
+                    <div class="item-actions">
+                        <button class="btn-small btn-edit" onclick="editItem('${item.id}', '${item.name}', '${item.category}')">Edit</button>
+                        <button class="btn-small btn-delete" onclick="deleteItem('${item.id}', '${item.name}')">Delete</button>
+                    </div>
                 </div>
-            </div>
-        `).join('');
+                `).join('')}
+            </div>`;
+        }).join('');
     } catch (err) {
         console.error('Error loading items:', err);
         itemsList.innerHTML = '<div class="empty-state">Failed to load products</div>';
@@ -132,6 +158,205 @@ function resetForm() {
     isEditMode = false;
     editingItemId = null;
     document.getElementById('formTitle').textContent = 'Add New Product';
+    clearExtraProducts();
+    document.getElementById('addAnotherBtn').style.display = '';
+    refreshCategoryHighlights();
+}
+
+// ===== Category quick-pick (existing categories as one-click options) =====
+let knownCategories = [];
+
+function renderCategoryOptions() {
+    const datalist = document.getElementById('categoryOptions');
+    if (datalist) {
+        datalist.innerHTML = '';
+        knownCategories.forEach(cat => {
+            const option = document.createElement('option');
+            option.value = cat;
+            datalist.appendChild(option);
+        });
+    }
+    document.querySelectorAll('.category-chips').forEach(fillCategoryChips);
+}
+
+function fillCategoryChips(chips) {
+    chips.innerHTML = '';
+    knownCategories.forEach(cat => {
+        const chip = document.createElement('button');
+        chip.type = 'button';
+        chip.className = 'category-chip';
+        chip.textContent = cat;
+        chips.appendChild(chip);
+    });
+    highlightCategoryChip(chips);
+}
+
+function highlightCategoryChip(chips) {
+    const input = chips.previousElementSibling;
+    const value = input ? input.value.trim().toLowerCase() : '';
+    chips.querySelectorAll('.category-chip').forEach(chip => {
+        chip.classList.toggle('active', chip.textContent.toLowerCase() === value);
+    });
+}
+
+function refreshCategoryHighlights() {
+    document.querySelectorAll('.category-chips').forEach(highlightCategoryChip);
+}
+
+// Clicking a chip fills the category box right above it
+document.addEventListener('click', (e) => {
+    const chip = e.target.closest('.category-chip');
+    if (!chip) return;
+    const chips = chip.parentElement;
+    chips.previousElementSibling.value = chip.textContent;
+    highlightCategoryChip(chips);
+});
+
+// Typing an existing category name highlights its chip too
+document.addEventListener('input', (e) => {
+    const chips = e.target.nextElementSibling;
+    if (chips && chips.classList.contains('category-chips')) highlightCategoryChip(chips);
+});
+
+// ===== Multiple products at once =====
+function addProductPanel() {
+    const container = document.getElementById('extraProducts');
+    const panels = container.querySelectorAll('.extra-product');
+
+    // Start with the previous panel's category (batches are often the same category)
+    const lastCategoryInput = panels.length
+        ? panels[panels.length - 1].querySelector('.extra-category')
+        : document.getElementById('productCategory');
+
+    const panel = document.createElement('div');
+    panel.className = 'extra-product';
+    panel.innerHTML = `
+        <div class="extra-product-header">
+            <span class="extra-product-title"></span>
+            <button type="button" class="extra-product-remove" title="Remove this product">&times;</button>
+        </div>
+        <div class="form-group">
+            <label>Product Image *</label>
+            <div class="file-input-wrapper">
+                <label class="file-input-label">
+                    Click to select image
+                    <span class="file-name"></span>
+                    <input type="file" accept="image/*" class="extra-image">
+                </label>
+            </div>
+        </div>
+        <div class="form-group">
+            <label>Product Name *</label>
+            <input type="text" class="extra-name" placeholder="e.g., Premium Silk Fabric" autocomplete="off">
+        </div>
+        <div class="form-group">
+            <label>Category *</label>
+            <input type="text" class="extra-category" placeholder="e.g., Electronics, Textiles, Hardware" list="categoryOptions" autocomplete="off">
+            <div class="category-chips"></div>
+        </div>
+    `;
+
+    panel.querySelector('.extra-category').value = lastCategoryInput.value.trim();
+
+    panel.querySelector('.extra-image').addEventListener('change', (e) => {
+        const input = e.target;
+        const label = panel.querySelector('.file-name');
+        const file = input.files[0];
+        if (file && file.size > 5 * 1024 * 1024) {
+            showToast('File must be smaller than 5MB', 'error');
+            input.value = '';
+            label.textContent = '';
+            return;
+        }
+        label.textContent = file ? `Selected: ${file.name}` : '';
+    });
+
+    panel.querySelector('.extra-product-remove').addEventListener('click', () => {
+        panel.remove();
+        updateProductPanels();
+    });
+
+    container.appendChild(panel);
+    fillCategoryChips(panel.querySelector('.category-chips'));
+    updateProductPanels();
+    panel.querySelector('.extra-name').focus();
+}
+
+function clearExtraProducts() {
+    document.getElementById('extraProducts').innerHTML = '';
+    updateProductPanels();
+}
+
+function updateProductPanels() {
+    const panels = document.querySelectorAll('#extraProducts .extra-product');
+    panels.forEach((panel, i) => {
+        panel.querySelector('.extra-product-title').textContent = `Product ${i + 2}`;
+    });
+    document.getElementById('firstProductTitle').style.display = panels.length ? '' : 'none';
+    document.querySelector('#catalogForm .btn-submit').textContent =
+        panels.length ? 'Save All Products' : 'Save Product';
+}
+
+function clearFirstPanel() {
+    document.getElementById('productName').value = '';
+    document.getElementById('productCategory').value = '';
+    document.getElementById('imageFile').value = '';
+    document.getElementById('fileName').textContent = '';
+    refreshCategoryHighlights();
+}
+
+// Gather every product in the form; returns null (and shows why) if any is incomplete
+function collectNewProducts() {
+    const panels = [...document.querySelectorAll('#extraProducts .extra-product')];
+    const firstName = document.getElementById('productName').value.trim();
+    const firstCategory = document.getElementById('productCategory').value.trim();
+    const firstFile = document.getElementById('imageFile').files[0];
+    const entries = [];
+
+    // The first panel may be left blank when extra panels are in use
+    if (firstName || firstCategory || firstFile || panels.length === 0) {
+        entries.push({ name: firstName, category: firstCategory, file: firstFile, panel: null, label: 'Product 1' });
+    }
+    panels.forEach(panel => {
+        entries.push({
+            name: panel.querySelector('.extra-name').value.trim(),
+            category: panel.querySelector('.extra-category').value.trim(),
+            file: panel.querySelector('.extra-image').files[0],
+            panel,
+            label: panel.querySelector('.extra-product-title').textContent,
+        });
+    });
+
+    const prefix = (entry) => (panels.length ? `${entry.label}: ` : '');
+    for (const entry of entries) {
+        if (!entry.name || !entry.category) {
+            showToast(`${prefix(entry)}Please fill in all fields`, 'error');
+            return null;
+        }
+        if (!entry.file) {
+            showToast(`${prefix(entry)}Please select an image`, 'error');
+            return null;
+        }
+    }
+    return entries;
+}
+
+// Save one at a time - each save updates catalog.json, so they can't run in parallel
+async function saveNewProducts(entries) {
+    const submitBtn = document.querySelector('#catalogForm .btn-submit');
+    for (let i = 0; i < entries.length; i++) {
+        const entry = entries[i];
+        if (entries.length > 1) submitBtn.textContent = `Saving ${i + 1} of ${entries.length}...`;
+        try {
+            await addCatalogItem(entry.name, entry.category, entry.file);
+        } catch (err) {
+            if (i === 0) throw err;
+            throw new Error(`Saved ${i} of ${entries.length}. "${entry.name}" failed — it and the rest are still in the form.`);
+        }
+        // Take saved ones out of the form so a retry doesn't add them twice
+        if (entry.panel) entry.panel.remove();
+        else clearFirstPanel();
+    }
 }
 
 async function submitCatalogForm(e) {
@@ -143,38 +368,51 @@ async function submitCatalogForm(e) {
         return;
     }
 
-    const name = document.getElementById('productName').value.trim();
-    const category = document.getElementById('productCategory').value.trim();
-    const fileInput = document.getElementById('imageFile');
+    const form = document.getElementById('catalogForm');
 
-    if (!name || !category) {
-        showToast('Please fill in all fields', 'error');
+    if (isEditMode) {
+        const name = document.getElementById('productName').value.trim();
+        const category = document.getElementById('productCategory').value.trim();
+        const fileInput = document.getElementById('imageFile');
+
+        if (!name || !category) {
+            showToast('Please fill in all fields', 'error');
+            return;
+        }
+
+        form.classList.add('loading');
+        try {
+            await editCatalogItem(editingItemId, name, category, fileInput.files[0]);
+            resetForm();
+            await loadCatalogItems();
+            showToast('Saved — live in about a minute', 'success');
+        } catch (err) {
+            console.error('Error:', err);
+            showToast(err.message || 'Failed to save', 'error');
+        } finally {
+            form.classList.remove('loading');
+        }
         return;
     }
 
-    const form = document.getElementById('catalogForm');
+    const entries = collectNewProducts();
+    if (!entries) return;
+
     form.classList.add('loading');
-
     try {
-        if (isEditMode) {
-            await editCatalogItem(editingItemId, name, category, fileInput.files[0]);
-        } else {
-            if (!fileInput.files[0]) {
-                showToast('Please select an image', 'error');
-                form.classList.remove('loading');
-                return;
-            }
-            await addCatalogItem(name, category, fileInput.files[0]);
-        }
-
+        await saveNewProducts(entries);
         resetForm();
         await loadCatalogItems();
-        showToast('Saved — live in about a minute', 'success');
+        showToast(entries.length === 1
+            ? 'Saved — live in about a minute'
+            : `Saved ${entries.length} products — live in about a minute`, 'success');
     } catch (err) {
         console.error('Error:', err);
+        await loadCatalogItems();
         showToast(err.message || 'Failed to save', 'error');
     } finally {
         form.classList.remove('loading');
+        updateProductPanels();
     }
 }
 
@@ -209,9 +447,12 @@ async function addCatalogItem(name, category, file) {
 async function editItem(id, name, category) {
     isEditMode = true;
     editingItemId = id;
+    clearExtraProducts();
+    document.getElementById('addAnotherBtn').style.display = 'none';
     document.getElementById('formTitle').textContent = 'Edit Product';
     document.getElementById('productName').value = name;
     document.getElementById('productCategory').value = category;
+    refreshCategoryHighlights();
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
