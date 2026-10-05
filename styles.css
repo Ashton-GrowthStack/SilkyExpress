@@ -261,7 +261,6 @@ body {
 .catalog-arrow svg path {
     vector-effect: non-scaling-stroke;
 }
-
 .catalog-arrow-prev svg {
     transform: scaleX(-1);
 }
@@ -304,13 +303,13 @@ body {
     animation: catalogArrowRipple 1.3s ease-out;
 }
 
-.catalog-arrow.is-firing path {
+.catalog-arrow.is-firing .chevron {
     animation: catalogChevronFlash 0.8s ease-out both;
 }
 
-.catalog-arrow.is-firing path:nth-child(3) { animation-delay: 0s; }
-.catalog-arrow.is-firing path:nth-child(2) { animation-delay: 0.15s; }
-.catalog-arrow.is-firing path:nth-child(1) { animation-delay: 0.3s; }
+.catalog-arrow.is-firing .chevron-inner { animation-delay: 0s; }
+.catalog-arrow.is-firing .chevron-middle { animation-delay: 0.15s; }
+.catalog-arrow.is-firing .chevron-outer { animation-delay: 0.3s; }
 
 @keyframes catalogArrowPress {
     0% { transform: scale(1); }
