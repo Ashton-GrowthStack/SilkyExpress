@@ -1124,37 +1124,61 @@ body.gallery-open {
         line-height: 1.5;
     }
 
-    /* Team: 2 per row */
+    /* Team: one person per row - photo on the left, name + role beside it, contact details below */
     .team-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 10px;
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .team-member {
+        display: grid;
+        grid-template-columns: 110px 1fr;
+        grid-template-areas:
+            "photo name"
+            "photo role"
+            "info  info";
+        grid-template-rows: auto 1fr auto;
+        column-gap: 14px;
+        padding: 12px;
+        text-align: left;
     }
 
     .team-photo {
-        height: 150px;
+        grid-area: photo;
+        width: 110px;
+        height: 110px;
+        border-radius: 8px;
     }
 
     .team-member h3 {
-        margin-top: 10px;
-        margin-bottom: 4px;
-        padding: 0 8px;
-        font-size: 14px;
+        grid-area: name;
+        align-self: end;
+        margin: 0 0 4px;
+        padding: 0;
+        font-size: 17px;
     }
 
     .member-role {
-        margin-bottom: 6px !important;
-        padding: 0 8px !important;
-        font-size: 11px;
+        grid-area: role;
+        align-self: start;
+        margin: 0 !important;
+        padding: 0 !important;
+        font-size: 13px;
+        line-height: 1.4;
     }
 
     .contact-info {
-        padding: 0 8px 12px;
+        grid-area: info;
+        margin-top: 12px;
+        padding: 12px 0 0;
+        border-top: 1px solid var(--border-light);
     }
 
     .contact-info p {
-        margin-bottom: 4px;
-        font-size: 10px;
-        line-height: 1.4;
+        margin-bottom: 6px;
+        padding: 0;
+        font-size: 13px;
+        line-height: 1.45;
         overflow-wrap: anywhere;
     }
 
