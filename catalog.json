@@ -88,5 +88,11 @@
     "name": "Rebar Straightening Machine",
     "category": "Construction Machinery",
     "image": "catalog/item-1791220108872-kxe22ghxd.png"
+  },
+  {
+    "id": "item-1791220112307-gxrn5i08r",
+    "name": "Concrete Mixer",
+    "category": "Construction Machinery",
+    "image": "catalog/item-1791220112307-gxrn5i08r.png"
   }
 ]
