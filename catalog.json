@@ -52,5 +52,11 @@
     "name": "Sanding & Polishing Machine",
     "category": "Woodworking Machinery",
     "image": "catalog/item-1791218008140-7qhw9ztpf.png"
+  },
+  {
+    "id": "item-1791218012526-cqobbmio3",
+    "name": "Timber Cross-cut Saw",
+    "category": "Woodworking Machinery",
+    "image": "catalog/item-1791218012526-cqobbmio3.png"
   }
 ]
