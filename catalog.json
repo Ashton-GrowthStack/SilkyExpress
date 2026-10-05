@@ -142,5 +142,11 @@
     "name": "Paper Tube Slitting Machine",
     "category": "Paper Tube Machinery",
     "image": "catalog/item-1791221141099-4qkur4ugn.png"
+  },
+  {
+    "id": "item-1791221144414-o4hscw5nr",
+    "name": "Paper Tube Precision Cutting Machine",
+    "category": "Paper Tube Machinery",
+    "image": "catalog/item-1791221144414-o4hscw5nr.png"
   }
 ]
