@@ -112,5 +112,11 @@
     "name": "Road Cutting Machine",
     "category": "Construction Machinery",
     "image": "catalog/item-1791220124576-udiqgqpcp.png"
+  },
+  {
+    "id": "item-1791220127927-5yjln0x5x",
+    "name": "Scaffold Straightening Machine",
+    "category": "Construction Machinery",
+    "image": "catalog/item-1791220127927-5yjln0x5x.png"
   }
 ]
