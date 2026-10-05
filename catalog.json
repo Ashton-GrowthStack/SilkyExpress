@@ -82,5 +82,11 @@
     "name": "Rebar Bending Machine",
     "category": "Construction Machinery",
     "image": "catalog/item-1791220104973-n1edfb754.png"
+  },
+  {
+    "id": "item-1791220108872-kxe22ghxd",
+    "name": "Rebar Straightening Machine",
+    "category": "Construction Machinery",
+    "image": "catalog/item-1791220108872-kxe22ghxd.png"
   }
 ]
