@@ -94,5 +94,11 @@
     "name": "Concrete Mixer",
     "category": "Construction Machinery",
     "image": "catalog/item-1791220112307-gxrn5i08r.png"
+  },
+  {
+    "id": "item-1791220116048-vijedyzgo",
+    "name": "Mortar Mixer",
+    "category": "Construction Machinery",
+    "image": "catalog/item-1791220116048-vijedyzgo.png"
   }
 ]
