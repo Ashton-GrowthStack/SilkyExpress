@@ -172,5 +172,11 @@
     "name": "Firework Paper Tube Production Line",
     "category": "Paper Tube Machinery",
     "image": "catalog/item-1791221162436-sl239u6gx.png"
+  },
+  {
+    "id": "item-1791221166902-ciw28kiz9",
+    "name": "Paper Tube Gluing Machine",
+    "category": "Paper Tube Machinery",
+    "image": "catalog/item-1791221166902-ciw28kiz9.png"
   }
 ]
