@@ -232,5 +232,11 @@
     "name": "Pastry Forming Machine",
     "category": "Food Machinery",
     "image": "catalog/item-1791224076658-tkpyyr2d3.png"
+  },
+  {
+    "id": "item-1791224080388-tqn3he966",
+    "name": "Meat Mincer",
+    "category": "Food Machinery",
+    "image": "catalog/item-1791224080388-tqn3he966.png"
   }
 ]
