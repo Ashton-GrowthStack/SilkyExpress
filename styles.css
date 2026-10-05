@@ -1312,3 +1312,45 @@ body.gallery-open {
         opacity: 0.3;
     }
 }
+
+/* Narrow phones (e.g. Galaxy S10/S20, 360px): Android's fallback fonts are a bit wider than
+   Georgia/Segoe UI, so tighten the top bar so the full "Silky Express" name still fits */
+@media (max-width: 400px) {
+    .navbar .container {
+        padding: 8px 10px;
+    }
+
+    .logo {
+        gap: 5px;
+    }
+
+    .logo-img {
+        width: 36px;
+        height: 36px;
+    }
+
+    .company-name {
+        font-size: 15px;
+        letter-spacing: -0.3px;
+    }
+
+    .nav-cta-mobile {
+        padding: 6px 7px;
+        letter-spacing: -0.1px;
+    }
+
+    .nav-toggle {
+        width: 40px;
+        height: 40px;
+        margin-left: 6px;
+        padding: 0 9px;
+    }
+}
+
+/* Phones: catalog arrows line up with the product pictures (slightly higher than centring on the whole card) */
+@media (max-width: 768px) {
+    .catalog-arrow {
+        align-self: flex-start;
+        margin-top: 8px;
+    }
+}
