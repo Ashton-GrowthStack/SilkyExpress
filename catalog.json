@@ -202,5 +202,11 @@
     "name": "Dough Sheeter",
     "category": "Food Machinery",
     "image": "catalog/item-1791224056756-oo9ccpa74.png"
+  },
+  {
+    "id": "item-1791224060348-fp45k2c28",
+    "name": "Steamed Bun Machine",
+    "category": "Food Machinery",
+    "image": "catalog/item-1791224060348-fp45k2c28.png"
   }
 ]
