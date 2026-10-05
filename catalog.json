@@ -220,5 +220,11 @@
     "name": "Vegetable Cutting Machine",
     "category": "Food Machinery",
     "image": "catalog/item-1791224068763-yb1z0pim9.png"
+  },
+  {
+    "id": "item-1791224072670-ft8xrssyt",
+    "name": "Peeling & Washing Machine",
+    "category": "Food Machinery",
+    "image": "catalog/item-1791224072670-ft8xrssyt.png"
   }
 ]
