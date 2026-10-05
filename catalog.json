@@ -130,5 +130,11 @@
     "name": "Mortar Pump",
     "category": "Construction Machinery",
     "image": "catalog/item-1791220136108-s8qexky9u.png"
+  },
+  {
+    "id": "item-1791220663232-ba9e6uikc",
+    "name": "Paper Tube Spiral Winding Machine",
+    "category": "Paper Tube Machinery",
+    "image": "catalog/item-1791220663232-ba9e6uikc.png"
   }
 ]
