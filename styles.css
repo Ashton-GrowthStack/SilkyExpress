@@ -202,20 +202,171 @@ body {
     color: var(--dark-charcoal);
 }
 
-.catalog-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-    gap: 20px;
+.catalog-carousel {
+    display: flex;
+    align-items: center;
+    gap: 12px;
     max-width: 1100px;
     margin: 0 auto;
 }
 
+.catalog-grid {
+    --catalog-per-view: 4;
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    gap: 20px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    padding: 8px 0;
+    scrollbar-width: none;
+}
+
+.catalog-grid::-webkit-scrollbar {
+    display: none;
+}
+
+/* Arrows sit in a faint rectangle as tall as the pictures,
+   centred on the whole card (picture + description) */
+.catalog-arrow {
+    position: relative;
+    flex: 0 0 auto;
+    width: 60px;
+    height: var(--catalog-img-h, 160px);
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(127, 212, 255, 0.06);
+    border: 1.5px solid rgba(127, 212, 255, 0.6);
+    border-radius: 10px;
+    cursor: pointer;
+    opacity: 0.85;
+    transition: opacity 0.3s ease, transform 0.3s ease, background-color 0.3s ease;
+}
+
+.catalog-arrow svg {
+    width: 42px;
+    height: 62px;
+    max-height: calc(100% - 16px);
+    fill: none;
+    stroke-width: 4;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    filter: drop-shadow(0 0 6px rgba(127, 212, 255, 0.45));
+    transition: transform 0.3s ease;
+}
+
+.catalog-arrow svg path {
+    vector-effect: non-scaling-stroke;
+}
+
+.catalog-arrow-prev svg {
+    transform: scaleX(-1);
+}
+
+.catalog-arrow:hover {
+    opacity: 1;
+    background-color: rgba(127, 212, 255, 0.1);
+}
+
+.catalog-arrow-next:hover svg {
+    transform: scale(1.08);
+}
+
+.catalog-arrow-prev:hover svg {
+    transform: scaleX(-1) scale(1.08);
+}
+
+.catalog-arrow:disabled {
+    opacity: 0.2;
+    cursor: default;
+}
+
+/* Click effect: ripple ring, press, chevrons light up smallest to biggest */
+.catalog-arrow::after {
+    content: '';
+    position: absolute;
+    inset: -1.5px;
+    border-radius: 10px;
+    border: 2px solid rgba(127, 212, 255, 0.9);
+    box-shadow: 0 0 12px rgba(127, 212, 255, 0.7);
+    opacity: 0;
+    pointer-events: none;
+}
+
+.catalog-arrow.is-firing {
+    animation: catalogArrowPress 0.6s ease;
+}
+
+.catalog-arrow.is-firing::after {
+    animation: catalogArrowRipple 1.3s ease-out;
+}
+
+.catalog-arrow.is-firing path {
+    animation: catalogChevronFlash 0.8s ease-out both;
+}
+
+.catalog-arrow.is-firing path:nth-child(3) { animation-delay: 0s; }
+.catalog-arrow.is-firing path:nth-child(2) { animation-delay: 0.15s; }
+.catalog-arrow.is-firing path:nth-child(1) { animation-delay: 0.3s; }
+
+@keyframes catalogArrowPress {
+    0% { transform: scale(1); }
+    35% { transform: scale(0.92); }
+    100% { transform: scale(1); }
+}
+
+@keyframes catalogArrowRipple {
+    0% { opacity: 1; transform: scale(1); }
+    100% { opacity: 0; transform: scale(1.35, 1.12); }
+}
+
+@keyframes catalogChevronFlash {
+    0% { opacity: 0.35; transform: translateX(0); }
+    40% { opacity: 1; transform: translateX(3px); filter: drop-shadow(0 0 6px #BDEBFF); }
+    100% { opacity: 1; transform: translateX(0); }
+}
+
 .catalog-item {
+    flex: 0 0 calc((100% - (var(--catalog-per-view) - 1) * 20px) / var(--catalog-per-view));
+    scroll-snap-align: start;
     background-color: rgba(255, 255, 255, 0.08);
     border-radius: 8px;
     overflow: hidden;
     text-align: center;
     transition: transform 0.3s ease;
+}
+
+@media (max-width: 900px) {
+    .catalog-grid {
+        --catalog-per-view: 3;
+    }
+}
+
+@media (max-width: 600px) {
+    .catalog-carousel {
+        gap: 6px;
+    }
+
+    .catalog-grid {
+        --catalog-per-view: 2;
+        gap: 12px;
+    }
+
+    .catalog-item {
+        flex-basis: calc((100% - 12px) / 2);
+    }
+
+    .catalog-arrow {
+        width: 40px;
+    }
+
+    .catalog-arrow svg {
+        width: 28px;
+        height: 44px;
+    }
 }
 
 .catalog-item:hover {
@@ -244,7 +395,7 @@ body {
 }
 
 .catalog-empty {
-    grid-column: 1 / -1;
+    flex: 1;
     text-align: center;
     padding: 40px 20px;
     color: var(--white);

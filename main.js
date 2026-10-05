@@ -162,7 +162,109 @@ function renderCatalogItems(items, category) {
             <div class="catalog-item-category">${item.category}</div>
         </div>
     `).join('');
+
+    catalogGrid.scrollLeft = 0;
+    updateCatalogArrows();
+}
+
+// Catalog carousel arrows
+function updateCatalogArrows() {
+    const catalogGrid = document.querySelector('.catalog-grid');
+    const prev = document.querySelector('.catalog-arrow-prev');
+    const next = document.querySelector('.catalog-arrow-next');
+    if (!catalogGrid || !prev || !next) return;
+
+    // Let the arrow box match the picture height
+    const firstImg = catalogGrid.querySelector('.catalog-item img');
+    if (firstImg && firstImg.offsetHeight) {
+        catalogGrid.parentElement.style.setProperty('--catalog-img-h', `${firstImg.offsetHeight}px`);
+    }
+
+    const maxScroll = catalogGrid.scrollWidth - catalogGrid.clientWidth;
+    prev.disabled = catalogGrid.scrollLeft <= 2;
+    next.disabled = catalogGrid.scrollLeft >= maxScroll - 2;
+}
+
+function initCatalogCarousel() {
+    const catalogGrid = document.querySelector('.catalog-grid');
+    const prev = document.querySelector('.catalog-arrow-prev');
+    const next = document.querySelector('.catalog-arrow-next');
+    if (!catalogGrid || !prev || !next) return;
+
+    // Move one "page" (the visible width) per click
+    prev.addEventListener('click', () => {
+        catalogGrid.scrollBy({ left: -catalogGrid.clientWidth, behavior: 'smooth' });
+        catalogArrowFeedback(prev);
+    });
+    next.addEventListener('click', () => {
+        catalogGrid.scrollBy({ left: catalogGrid.clientWidth, behavior: 'smooth' });
+        catalogArrowFeedback(next);
+    });
+    prev.addEventListener('pointerdown', wakeCatalogAudio);
+    next.addEventListener('pointerdown', wakeCatalogAudio);
+    preloadCatalogArrowSound();
+    catalogGrid.addEventListener('scroll', updateCatalogArrows, { passive: true });
+    window.addEventListener('resize', updateCatalogArrows);
+    updateCatalogArrows();
+}
+
+// Click effect + sound on the catalog arrows
+const CATALOG_ARROW_SOUND = 'sounds/catalog-arrow-click.mp3';
+let catalogAudioCtx = null;
+let catalogArrowBuffer = null;
+
+// Load + decode the sound up front so the first click plays instantly
+function preloadCatalogArrowSound() {
+    try {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (!AudioCtx) return;
+        catalogAudioCtx = new AudioCtx();
+        fetch(CATALOG_ARROW_SOUND)
+            .then(res => res.arrayBuffer())
+            .then(data => catalogAudioCtx.decodeAudioData(data))
+            .then(buffer => { catalogArrowBuffer = buffer; })
+            .catch(() => {});
+        document.addEventListener('pointerdown', wakeCatalogAudio, { once: true });
+        document.addEventListener('keydown', wakeCatalogAudio, { once: true });
+    } catch (err) {
+        // Sound is optional
+    }
+}
+
+// Browsers keep audio asleep until the user interacts - wake it on press, before the click fires
+function wakeCatalogAudio() {
+    if (catalogAudioCtx && catalogAudioCtx.state === 'suspended') catalogAudioCtx.resume();
+}
+
+function catalogArrowFeedback(button) {
+    // Restart the CSS animation even on rapid clicks
+    button.classList.remove('is-firing');
+    void button.offsetWidth;
+    button.classList.add('is-firing');
+    clearTimeout(button._firingTimer);
+    button._firingTimer = setTimeout(() => button.classList.remove('is-firing'), 1400);
+
+    playCatalogArrowSound();
+}
+
+// "Modern technology select" (Mixkit #3124, free licence)
+function playCatalogArrowSound() {
+    try {
+        if (!catalogAudioCtx || !catalogArrowBuffer) return;
+        wakeCatalogAudio();
+        const source = catalogAudioCtx.createBufferSource();
+        source.buffer = catalogArrowBuffer;
+        const gain = catalogAudioCtx.createGain();
+        gain.gain.value = 0.6;
+        source.connect(gain).connect(catalogAudioCtx.destination);
+        source.start();
+    } catch (err) {
+        // Sound is optional - ignore if the browser blocks it
+    }
 }
 
 // Load catalog on page load
-document.addEventListener('DOMContentLoaded', loadCatalog);
+document.addEventListener('DOMContentLoaded', () => {
+    initCatalogCarousel();
+    loadCatalog();
+});

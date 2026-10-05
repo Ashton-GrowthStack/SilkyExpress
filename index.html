@@ -46,7 +46,39 @@
             </div>
             <div class="catalog-section" id="catalog">
                 <div class="catalog-filters"></div>
-                <div class="catalog-grid"></div>
+                <div class="catalog-carousel">
+                    <button class="catalog-arrow catalog-arrow-prev" type="button" aria-label="Previous products">
+                        <svg viewBox="0 0 48 48" preserveAspectRatio="none" aria-hidden="true">
+                            <defs>
+                                <linearGradient id="catalogArrowGradPrev" x1="0" y1="0" x2="1" y2="1">
+                                    <stop offset="0%" stop-color="#7FD4FF"/>
+                                    <stop offset="100%" stop-color="#0A3D91"/>
+                                </linearGradient>
+                            </defs>
+                            <g stroke="url(#catalogArrowGradPrev)">
+                                <path d="M20 6 L38 24 L20 42"/>
+                                <path d="M19 12 L31 24 L19 36"/>
+                                <path d="M18 18 L24 24 L18 30"/>
+                            </g>
+                        </svg>
+                    </button>
+                    <div class="catalog-grid"></div>
+                    <button class="catalog-arrow catalog-arrow-next" type="button" aria-label="More products">
+                        <svg viewBox="0 0 48 48" preserveAspectRatio="none" aria-hidden="true">
+                            <defs>
+                                <linearGradient id="catalogArrowGradNext" x1="0" y1="0" x2="1" y2="1">
+                                    <stop offset="0%" stop-color="#7FD4FF"/>
+                                    <stop offset="100%" stop-color="#0A3D91"/>
+                                </linearGradient>
+                            </defs>
+                            <g stroke="url(#catalogArrowGradNext)">
+                                <path d="M20 6 L38 24 L20 42"/>
+                                <path d="M19 12 L31 24 L19 36"/>
+                                <path d="M18 18 L24 24 L18 30"/>
+                            </g>
+                        </svg>
+                    </button>
+                </div>
             </div>
             <a href="#consultation" class="btn btn-primary catalog-cta">Request Consultation</a>
         </div>
