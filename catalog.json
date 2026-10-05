@@ -100,5 +100,11 @@
     "name": "Mortar Mixer",
     "category": "Construction Machinery",
     "image": "catalog/item-1791220116048-vijedyzgo.png"
+  },
+  {
+    "id": "item-1791220120384-ptdob040s",
+    "name": "Concrete Vibrator",
+    "category": "Construction Machinery",
+    "image": "catalog/item-1791220120384-ptdob040s.png"
   }
 ]
