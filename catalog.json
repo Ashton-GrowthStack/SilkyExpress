@@ -76,5 +76,11 @@
     "name": "Rebar Cutting Machine",
     "category": "Construction Machinery",
     "image": "catalog/item-1791219844197-liy7nqafc.png"
+  },
+  {
+    "id": "item-1791220104973-n1edfb754",
+    "name": "Rebar Bending Machine",
+    "category": "Construction Machinery",
+    "image": "catalog/item-1791220104973-n1edfb754.png"
   }
 ]
