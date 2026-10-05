@@ -118,5 +118,11 @@
     "name": "Scaffold Straightening Machine",
     "category": "Construction Machinery",
     "image": "catalog/item-1791220127927-5yjln0x5x.png"
+  },
+  {
+    "id": "item-1791220131868-mfqm1tx98",
+    "name": "Rebar Thread Rolling Machine",
+    "category": "Construction Machinery",
+    "image": "catalog/item-1791220131868-mfqm1tx98.png"
   }
 ]
