@@ -226,5 +226,11 @@
     "name": "Peeling & Washing Machine",
     "category": "Food Machinery",
     "image": "catalog/item-1791224072670-ft8xrssyt.png"
+  },
+  {
+    "id": "item-1791224076658-tkpyyr2d3",
+    "name": "Pastry Forming Machine",
+    "category": "Food Machinery",
+    "image": "catalog/item-1791224076658-tkpyyr2d3.png"
   }
 ]
