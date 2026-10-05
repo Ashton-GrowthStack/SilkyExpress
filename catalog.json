@@ -196,5 +196,11 @@
     "name": "Dough Mixer",
     "category": "Food Machinery",
     "image": "catalog/item-1791223796978-68btwagqn.png"
+  },
+  {
+    "id": "item-1791224056756-oo9ccpa74",
+    "name": "Dough Sheeter",
+    "category": "Food Machinery",
+    "image": "catalog/item-1791224056756-oo9ccpa74.png"
   }
 ]
