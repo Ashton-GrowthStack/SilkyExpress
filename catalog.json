@@ -208,5 +208,11 @@
     "name": "Steamed Bun Machine",
     "category": "Food Machinery",
     "image": "catalog/item-1791224060348-fp45k2c28.png"
+  },
+  {
+    "id": "item-1791224064858-tyteg50co",
+    "name": "Dough Mixing & Kneading Machine",
+    "category": "Food Machinery",
+    "image": "catalog/item-1791224064858-tyteg50co.png"
   }
 ]
