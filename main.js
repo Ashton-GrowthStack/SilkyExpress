@@ -104,6 +104,24 @@ window.addEventListener('load', () => {
     }
 });
 
+// Mobile menu (☰) - the button is only visible on small screens
+const navToggle = document.querySelector('.nav-toggle');
+const navLinks = document.getElementById('navLinks');
+if (navToggle && navLinks) {
+    navToggle.addEventListener('click', () => {
+        const open = navLinks.classList.toggle('open');
+        navToggle.setAttribute('aria-expanded', String(open));
+        navToggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+    });
+    // Close the menu after tapping a link
+    navLinks.addEventListener('click', (e) => {
+        if (!e.target.closest('a')) return;
+        navLinks.classList.remove('open');
+        navToggle.setAttribute('aria-expanded', 'false');
+        navToggle.setAttribute('aria-label', 'Open menu');
+    });
+}
+
 // Load and render catalog
 function loadCatalog() {
     const catalogGrid = document.querySelector('.catalog-grid');
