@@ -190,5 +190,11 @@
     "name": "Large-Diameter Paper Tube Machine",
     "category": "Paper Tube Machinery",
     "image": "catalog/item-1791221174300-cco6wse1p.png"
+  },
+  {
+    "id": "item-1791223796978-68btwagqn",
+    "name": "Dough Mixer",
+    "category": "Food Machinery",
+    "image": "catalog/item-1791223796978-68btwagqn.png"
   }
 ]
