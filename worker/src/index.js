@@ -57,6 +57,8 @@ export default {
             } else if (path.match(/^\/items\/[^/]+$/) && request.method === 'DELETE') {
                 const id = path.split('/')[2];
                 return handleDeleteItem(id, env, responseHeaders);
+            } else if (path === '/reorder' && request.method === 'POST') {
+                return handleReorder(request, env, responseHeaders);
             } else {
                 return new Response(JSON.stringify({ error: 'Not found' }), {
                     status: 404,
@@ -220,6 +222,49 @@ async function handleDeleteItem(id, env, headers) {
             console.warn('Could not delete image:', imgErr.message);
             // Continue anyway - the JSON update is what matters
         }
+
+        return new Response(JSON.stringify({ success: true }), {
+            status: 200,
+            headers: { ...headers, 'Content-Type': 'application/json' },
+        });
+    } catch (err) {
+        return new Response(JSON.stringify({ error: err.message }), {
+            status: 500,
+            headers: { ...headers, 'Content-Type': 'application/json' },
+        });
+    }
+}
+
+// Reorder categories: items are regrouped so each category's items appear
+// in the requested order. The homepage builds its filter buttons in the
+// order categories first appear in catalog.json, so this sets their order.
+async function handleReorder(request, env, headers) {
+    const body = await request.json();
+    const order = Array.isArray(body.categories) ? body.categories : null;
+
+    if (!order) {
+        return new Response(JSON.stringify({ error: 'Missing categories' }), {
+            status: 400,
+            headers: { ...headers, 'Content-Type': 'application/json' },
+        });
+    }
+
+    try {
+        const catalogContent = await fetchCatalogWithSha(env);
+        const items = JSON.parse(atob(catalogContent.content));
+
+        // Stable sort: categories not in the list keep their place at the end
+        const rank = (category) => {
+            const i = order.indexOf(category);
+            return i === -1 ? order.length : i;
+        };
+        const reordered = items
+            .map((item, index) => ({ item, index }))
+            .sort((a, b) => (rank(a.item.category) - rank(b.item.category)) || (a.index - b.index))
+            .map(entry => entry.item);
+
+        const newContent = btoa(JSON.stringify(reordered, null, 2));
+        await updateGitHubFile(env, CATALOG_PATH, newContent, catalogContent.sha, 'Catalog: reorder categories');
 
         return new Response(JSON.stringify({ success: true }), {
             status: 200,

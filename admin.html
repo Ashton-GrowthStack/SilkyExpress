@@ -158,6 +158,85 @@
             text-transform: capitalize;
         }
 
+        .category-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .category-position {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background-color: #d4af37;
+            color: #2c3e50;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .category-move {
+            display: flex;
+            gap: 4px;
+        }
+
+        .category-move-btn {
+            width: 28px;
+            height: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            border-radius: 4px;
+            background-color: transparent;
+            color: white;
+            font-size: 11px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .category-move-btn:hover:not(:disabled) {
+            background-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .category-move-btn:disabled {
+            opacity: 0.3;
+            cursor: default;
+        }
+
+        .order-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 12px;
+            padding: 10px 14px;
+            background-color: #fff8e1;
+            border: 1px solid #d4af37;
+            border-radius: 6px;
+            color: #2c3e50;
+            font-size: 13px;
+        }
+
+        .order-bar-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-order-save {
+            background-color: #27ae60;
+            color: white;
+        }
+
+        .btn-order-save:hover {
+            background-color: #1e8449;
+        }
+
+        .btn-order-cancel {
+            background-color: #95a5a6;
+            color: white;
+        }
+
         .category-count {
             background-color: rgba(255, 255, 255, 0.2);
             border-radius: 10px;
@@ -518,6 +597,13 @@
             <div class="items-section">
                 <h2 class="section-title">Current Products</h2>
                 <div class="items-total" id="itemsTotal"></div>
+                <div class="order-bar" id="orderBar" style="display: none;">
+                    <span>Category order changed — numbers show the order on the homepage (after "All").</span>
+                    <span class="order-bar-actions">
+                        <button type="button" class="btn-small btn-order-save" onclick="saveCategoryOrder()">Save order</button>
+                        <button type="button" class="btn-small btn-order-cancel" onclick="cancelCategoryOrder()">Cancel</button>
+                    </span>
+                </div>
                 <div class="items-list" id="itemsList"></div>
             </div>
 
@@ -580,6 +666,6 @@
         </div>
     </div>
 
-    <script src="admin.js"></script>
+    <script src="admin.js?v=2026-10-05-order"></script>
 </body>
 </html>

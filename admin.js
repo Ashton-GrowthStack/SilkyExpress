@@ -82,35 +82,61 @@ async function loadCatalogItems() {
         });
         if (!response.ok) throw new Error('Failed to load catalog');
 
-        const items = await response.json();
-        const itemsTotal = document.getElementById('itemsTotal');
-        if (!items || items.length === 0) {
-            itemsList.innerHTML = '<div class="empty-state">No products yet. Add one below!</div>';
-            if (itemsTotal) itemsTotal.textContent = '';
-            return;
-        }
+        catalogItems = await response.json() || [];
 
-        // Group by category (A-Z), items A-Z within each group
-        const groups = {};
-        items.forEach(item => {
-            (groups[item.category] = groups[item.category] || []).push(item);
-        });
-        const categories = Object.keys(groups).sort((a, b) => a.localeCompare(b));
+        // Category order = order categories first appear in catalog.json,
+        // which is also the order of the filter buttons on the homepage
+        categoryOrder = [...new Set(catalogItems.map(item => item.category))];
+        savedCategoryOrder = [...categoryOrder];
 
-        knownCategories = categories;
+        knownCategories = [...categoryOrder].sort((a, b) => a.localeCompare(b));
         renderCategoryOptions();
+        renderCatalogList();
+    } catch (err) {
+        console.error('Error loading items:', err);
+        itemsList.innerHTML = '<div class="empty-state">Failed to load products</div>';
+    }
+}
 
-        if (itemsTotal) {
-            itemsTotal.textContent = `${items.length} product${items.length === 1 ? '' : 's'} in ${categories.length} categor${categories.length === 1 ? 'y' : 'ies'}`;
-        }
+// ===== Category order (matches homepage filter button order) =====
+let catalogItems = [];
+let categoryOrder = [];
+let savedCategoryOrder = [];
 
-        itemsList.innerHTML = categories.map(category => {
-            const groupItems = groups[category].sort((a, b) => a.name.localeCompare(b.name));
+function renderCatalogList() {
+    const itemsList = document.getElementById('itemsList');
+    const itemsTotal = document.getElementById('itemsTotal');
+    updateOrderBar();
+
+    if (catalogItems.length === 0) {
+        itemsList.innerHTML = '<div class="empty-state">No products yet. Add one below!</div>';
+        if (itemsTotal) itemsTotal.textContent = '';
+        return;
+    }
+
+    const groups = {};
+    catalogItems.forEach(item => {
+        (groups[item.category] = groups[item.category] || []).push(item);
+    });
+
+    if (itemsTotal) {
+        itemsTotal.textContent = `${catalogItems.length} product${catalogItems.length === 1 ? '' : 's'} in ${categoryOrder.length} categor${categoryOrder.length === 1 ? 'y' : 'ies'}`;
+    }
+
+    itemsList.innerHTML = categoryOrder.map((category, index) => {
+            const groupItems = [...groups[category]].sort((a, b) => a.name.localeCompare(b.name));
             return `
             <div class="category-group">
                 <div class="category-heading">
-                    <span>${category}</span>
-                    <span class="category-count">${groupItems.length}</span>
+                    <span class="category-title">
+                        <span class="category-position" title="Position on the homepage (after All)">${index + 1}</span>
+                        <span>${category}</span>
+                        <span class="category-count">${groupItems.length}</span>
+                    </span>
+                    <span class="category-move">
+                        <button type="button" class="category-move-btn" data-move="-1" data-index="${index}" title="Move up" ${index === 0 ? 'disabled' : ''}>&#9650;</button>
+                        <button type="button" class="category-move-btn" data-move="1" data-index="${index}" title="Move down" ${index === categoryOrder.length - 1 ? 'disabled' : ''}>&#9660;</button>
+                    </span>
                 </div>
                 ${groupItems.map(item => `
                 <div class="item-card">
@@ -126,10 +152,60 @@ async function loadCatalogItems() {
                 </div>
                 `).join('')}
             </div>`;
-        }).join('');
+    }).join('');
+}
+
+function isCategoryOrderChanged() {
+    return categoryOrder.join('\n') !== savedCategoryOrder.join('\n');
+}
+
+function updateOrderBar() {
+    const bar = document.getElementById('orderBar');
+    if (bar) bar.style.display = isCategoryOrderChanged() ? '' : 'none';
+}
+
+// ▲ / ▼ buttons on each category heading
+document.addEventListener('click', (e) => {
+    const btn = e.target.closest('.category-move-btn');
+    if (!btn) return;
+    const from = Number(btn.dataset.index);
+    const to = from + Number(btn.dataset.move);
+    if (to < 0 || to >= categoryOrder.length) return;
+    [categoryOrder[from], categoryOrder[to]] = [categoryOrder[to], categoryOrder[from]];
+    renderCatalogList();
+});
+
+function cancelCategoryOrder() {
+    categoryOrder = [...savedCategoryOrder];
+    renderCatalogList();
+}
+
+async function saveCategoryOrder() {
+    const bar = document.getElementById('orderBar');
+    bar.classList.add('loading');
+    try {
+        const response = await fetch(`${WORKER_URL}/reorder`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Admin-Passcode': currentPasscode,
+            },
+            body: JSON.stringify({ categories: categoryOrder }),
+        });
+
+        if (response.status === 401) {
+            lockAdmin();
+            throw new Error('Passcode incorrect');
+        }
+        if (!response.ok) throw new Error('Failed to save order');
+
+        await loadCatalogItems();
+        showToast('Order saved — live in about a minute', 'success');
     } catch (err) {
-        console.error('Error loading items:', err);
-        itemsList.innerHTML = '<div class="empty-state">Failed to load products</div>';
+        console.error('Error:', err);
+        showToast(err.message || 'Failed to save order', 'error');
+    } finally {
+        bar.classList.remove('loading');
     }
 }
 
