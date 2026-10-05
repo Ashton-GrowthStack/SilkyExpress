@@ -40,5 +40,11 @@
     "name": "Woodworking Band Saw",
     "category": "Woodworking Machinery",
     "image": "catalog/item-1791217999103-0a1hlwzlq.png"
+  },
+  {
+    "id": "item-1791218004020-dodzg1cm5",
+    "name": "Woodworking Planer",
+    "category": "Woodworking Machinery",
+    "image": "catalog/item-1791218004020-dodzg1cm5.png"
   }
 ]
