@@ -70,5 +70,11 @@
     "name": "Formwork Reconditioning Saw",
     "category": "Woodworking Machinery",
     "image": "catalog/item-1791218021170-jkcxnxqwm.png"
+  },
+  {
+    "id": "item-1791219844197-liy7nqafc",
+    "name": "Rebar Cutting Machine",
+    "category": "Construction Machinery",
+    "image": "catalog/item-1791219844197-liy7nqafc.png"
   }
 ]
